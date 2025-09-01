@@ -4,10 +4,13 @@ import Article from '@/app/_components/Article';
 import styles from './page.module.css';
 import ButtonLink from '@/app/_components/ButtonLink';
 
-// ページのPropsの型定義を修正
 type Props = {
-  params: { slug: string };
-  searchParams: { [key: string]: string | string[] | undefined };
+  params: Promise<{
+    slug: string;
+  }>;
+  searchParams: Promise<{
+    dk: string;
+  }>;
 };
 
 export async function generateStaticParams() {
@@ -22,9 +25,11 @@ export async function generateStaticParams() {
   return [...paths];
 }
 
-export async function generateMetadata({ params, searchParams }: Props): Promise<Metadata> {
+export async function generateMetadata(props: Props): Promise<Metadata> {
+  const searchParams = await props.searchParams;
+  const params = await props.params;
   const data = await getNewsDetail(params.slug, {
-    draftKey: searchParams.dk as string,
+    draftKey: searchParams.dk,
   });
 
   return {
@@ -41,9 +46,11 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
   };
 }
 
-export default async function Page({ params, searchParams }: Props) {
+export default async function Page(props: Props) {
+  const searchParams = await props.searchParams;
+  const params = await props.params;
   const data = await getNewsDetail(params.slug, {
-    draftKey: searchParams.dk as string,
+    draftKey: searchParams.dk,
   });
   return (
     <>
