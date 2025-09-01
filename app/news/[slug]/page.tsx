@@ -1,21 +1,34 @@
 import { Metadata } from 'next';
-import { getNewsDetail } from '@/app/_libs/microcms';
+import { getNewsDetail, getNewsList } from '@/app/_libs/microcms';
 import Article from '@/app/_components/Article';
 import styles from './page.module.css';
 import ButtonLink from '@/app/_components/ButtonLink';
 
 type Props = {
-  params: Promise<{
+  params: {
     slug: string;
-  }>;
-  searchParams: Promise<{
+  };
+  searchParams: {
     dk: string;
-  }>;
+  };
 };
 
-export async function generateMetadata(props: Props): Promise<Metadata> {
-  const searchParams = await props.searchParams;
-  const params = await props.params;
+export async function generateStaticParams() {
+  const { contents } = await getNewsList();
+
+  const paths = contents.map((news) => {
+    return {
+      slug: news.id,
+    };
+  });
+
+  return [...paths];
+}
+
+export async function generateMetadata({
+  params,
+  searchParams,
+}: Props): Promise<Metadata> {
   const data = await getNewsDetail(params.slug, {
     draftKey: searchParams.dk,
   });
@@ -34,9 +47,7 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
   };
 }
 
-export default async function Page(props: Props) {
-  const searchParams = await props.searchParams;
-  const params = await props.params;
+export default async function Page({ params, searchParams }: Props) {
   const data = await getNewsDetail(params.slug, {
     draftKey: searchParams.dk,
   });
