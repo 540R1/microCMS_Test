@@ -5,12 +5,7 @@ import styles from './page.module.css';
 import ButtonLink from '@/app/_components/ButtonLink';
 
 type Props = {
-  params: Promise<{
-    slug: string;
-  }>;
-  searchParams: Promise<{
-    dk: string;
-  }>;
+  params: { slug: string };
 };
 
 export async function generateStaticParams() {
@@ -25,12 +20,8 @@ export async function generateStaticParams() {
   return [...paths];
 }
 
-export async function generateMetadata(props: Props): Promise<Metadata> {
-  const searchParams = await props.searchParams;
-  const params = await props.params;
-  const data = await getNewsDetail(params.slug, {
-    draftKey: searchParams.dk,
-  });
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const data = await getNewsDetail(params.slug);
 
   return {
     title: data.title,
@@ -46,12 +37,8 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
   };
 }
 
-export default async function Page(props: Props) {
-  const searchParams = await props.searchParams;
-  const params = await props.params;
-  const data = await getNewsDetail(params.slug, {
-    draftKey: searchParams.dk,
-  });
+export default async function Page({ params }: Props) {
+  const data = await getNewsDetail(params.slug);
   return (
     <>
       <Article data={data} />
