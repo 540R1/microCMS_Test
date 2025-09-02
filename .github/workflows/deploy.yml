@@ -41,8 +41,9 @@ jobs:
           FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
           FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
         run: |
-          lftp -c "
+          set -ex
+          lftp -d -c "
           open -u $FTP_USERNAME,$FTP_PASSWORD $FTP_SERVER
-          mirror -R --delete -x ".htaccess" ./out /  # .htaccessを除外して他のファイルを同期
+          mirror -R --verbose --delete -x ".htaccess" ./out /
           bye
-          " || true
+          "
