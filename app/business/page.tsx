@@ -3,17 +3,8 @@ import { getBusinessList } from '@/app/_libs/microcms';
 import styles from './page.module.css';
 import ButtonLink from '@/app/_components/ButtonLink';
 
-type Props = {
-  searchParams: Promise<{
-    dk: string;
-  }>;
-};
-
-export default async function Page(props: Props) {
-  const searchParams = await props.searchParams;
-  const data = await getBusinessList({
-    draftKey: searchParams.dk,
-  });
+export default async function Page() {
+  const data = await getBusinessList();
   return (
     <div className={styles.container}>
       {data.contents.length === 0 ? (
