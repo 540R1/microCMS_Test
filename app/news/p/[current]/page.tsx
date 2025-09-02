@@ -9,6 +9,18 @@ type Props = {
   }>;
 };
 
+export async function generateStaticParams() {
+  const { totalCount } = await getNewsList();
+  const range = (start, end) =>
+    [...Array(end - start + 1)].map((_, i) => start + i);
+
+  const paths = range(1, Math.ceil(totalCount / NEWS_LIST_LIMIT)).map((repo) => ({
+    current: repo.toString(),
+  }));
+
+  return [...paths];
+}
+
 export default async function Page(props: Props) {
   const params = await props.params;
   const current = parseInt(params.current as string, 10);
