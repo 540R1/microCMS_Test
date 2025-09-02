@@ -11,7 +11,7 @@ type Props = {
 
 export async function generateStaticParams() {
   const { totalCount } = await getNewsList();
-  const range = (start, end) =>
+  const range = (start: number, end: number) =>
     [...Array(end - start + 1)].map((_, i) => start + i);
 
   const paths = range(1, Math.ceil(totalCount / NEWS_LIST_LIMIT)).map((repo) => ({
