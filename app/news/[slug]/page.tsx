@@ -20,6 +20,7 @@ export async function generateStaticParams() {
   return [...paths];
 }
 
+// @ts-ignore
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const data = await getNewsDetail(params.slug);
 
@@ -37,6 +38,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
+// @ts-ignore
 export default async function Page({ params }: Props) {
   const data = await getNewsDetail(params.slug);
   return (
